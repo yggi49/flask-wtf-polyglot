@@ -1,0 +1,4 @@
+*.pyc
+/Flask_WTF_Polyglot.egg-info/
+/build/
+/dist/
