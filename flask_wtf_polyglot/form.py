@@ -1,7 +1,7 @@
-from flask_wtf.form import Form
+from flask_wtf.form import FlaskForm
 
 from wtf_polyglot.meta import PolyglotMeta
 
 
-class PolyglotForm(Form):
+class PolyglotForm(FlaskForm):
     Meta = PolyglotMeta
