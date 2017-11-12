@@ -29,6 +29,20 @@ In contrast, using Flask-WTF’s default ``Form``, the output would be::
 
    <input checked id="foo" name="foo" type="checkbox" value="y">
 
+In addition, this package exports `WTForms-Polyglot`_’s custom implementation
+of WTForms’ ``SubmitField``, which renders as a ``<button>`` instead of an
+``<input>`` element.  For example::
+
+   from flask_wtf_polyglot import PolyglotForm, SubmitField
+
+   class MyForm(PolyglotForm):
+       foo = SubmitField('Bar')
+
+Produces this output::
+
+   <button id="foo" name="foo" type="submit" value="bar">bar</button>
+
+
 
 Dependencies
 ------------

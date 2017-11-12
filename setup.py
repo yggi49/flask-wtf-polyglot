@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='Flask-WTF-Polyglot',
-    version='0.2',
+    version='0.3',
     url='http://github.com/yggi49/flask-wtf-polyglot',
     license='BSD',
     author='Clemens Kaposi',
