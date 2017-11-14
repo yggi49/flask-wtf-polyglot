@@ -2,6 +2,12 @@ Flask-WTF-Polyglot Changelog
 ============================
 
 
+Release 0.3 (Nov 12, 2017)
+--------------------------
+
+* *Export WTF-Polyglot’s SubmitField for convenience
+
+
 Release 0.2 (Jun 6, 2017)
 -------------------------
 
