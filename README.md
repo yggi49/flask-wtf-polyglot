@@ -41,13 +41,13 @@ of WTForms’ `SubmitField`, which renders as a `<button>` instead of an
 from flask_wtf_polyglot import PolyglotForm, SubmitField
 
 class MyForm(PolyglotForm):
-    foo = SubmitField('Bar')
+    foo = SubmitField("Bar")
 ```
 
 Produces this output:
 
 ```html
-<button id="foo" name="foo" type="submit" value="bar">bar</button>
+<button id="foo" name="foo" type="submit" value="Bar">Bar</button>
 ```
 
 
