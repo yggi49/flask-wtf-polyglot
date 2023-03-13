@@ -1,6 +1,30 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ]
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:base"
+    ],
+    "packageRules": [
+        {
+            "enabled": false,
+            "matchManagers": [
+                "gitlabci"
+            ],
+            "matchPackageNames": [
+                "python"
+            ],
+            "matchUpdateTypes": [
+                "major",
+                "minor"
+            ]
+        },
+        {
+            "matchManagers": [
+                "gitlabci"
+            ],
+            "matchPackageNames": [
+                "python"
+            ],
+            "separateMinorPatch": true
+        }
+    ]
 }
