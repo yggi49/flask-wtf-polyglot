@@ -42,7 +42,7 @@ style:
 complexity:package:
   extends: .complexity
   variables:
-    CHECK_DIR: wtf_polyglot
+    CHECK_DIR: flask_wtf_polyglot
 
 complexity:tests:
   extends: .complexity
