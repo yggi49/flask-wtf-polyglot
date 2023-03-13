@@ -1,0 +1,126 @@
+---
+default:
+  image: python:3.11.2
+  before_script:
+    - curl -sSL https://install.python-poetry.org | python3 -
+    - export PATH=$POETRY_HOME/venv/bin:$PATH
+    - poetry config virtualenvs.in-project true
+    - poetry install
+  tags:
+    - docker
+  cache:
+    key:
+      files:
+        - poetry.lock
+      prefix: $CI_JOB_IMAGE-poetry-$POETRY_VERSION
+    paths:
+      - .cache/pre-commit
+      - .poetry-1.4.0
+      - .venv
+
+variables:
+  POETRY_VERSION: 1.4.0
+  POETRY_HOME: $CI_PROJECT_DIR/.poetry-1.4.0
+  PRE_COMMIT_HOME: $CI_PROJECT_DIR/.cache/pre-commit
+
+stages:
+  - style
+  - test
+  - build
+  - publish
+
+style:
+  stage: style
+  script:
+    - poetry run pre-commit run -a
+
+.complexity:
+  stage: style
+  script:
+    - poetry run radon cc $CHECK_DIR -a -s
+
+complexity:package:
+  extends: .complexity
+  variables:
+    CHECK_DIR: wtf_polyglot
+
+complexity:tests:
+  extends: .complexity
+  variables:
+    CHECK_DIR: tests
+
+.test:
+  stage: test
+  script:
+    - >-
+      poetry run pytest
+      --junitxml=junit_report.xml
+      --cov-report=xml:coverage.xml
+  coverage: /^TOTAL.+?(\d+(?:\.\d+)?\%)$/
+  artifacts:
+    name: $CI_PROJECT_NAME-coverage-$CI_COMMIT_SHORT_SHA-$CI_JOB_IMAGE
+    paths:
+      - htmlcov
+    when: always
+    reports:
+      junit: junit_report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+test:py37:
+  extends: .test
+  image: python:3.7.16
+
+test:py38:
+  extends: .test
+  image: python:3.8.16
+
+test:py39:
+  extends: .test
+  image: python:3.9.16
+
+test:py310:
+  extends: .test
+  image: python:3.10.10
+
+test:py311:
+  extends: .test
+  image: python:3.11.2
+
+# You can override the included template(s) by including variable overrides
+# SAST customization:
+# https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization:
+# https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization:
+# https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization:
+# https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places See
+# https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+sast:
+  stage: test
+  before_script: []
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
+build:
+  stage: build
+  dependencies: []
+  script:
+    - poetry build
+  artifacts:
+    name: $CI_PROJECT_NAME-build-$CI_COMMIT_SHORT_SHA
+    paths:
+      - dist/
+
+publish:
+  stage: publish
+  dependencies:
+    - build
+  script:
+    - poetry publish
+  # Run this job only in pipelines for release tags
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/
