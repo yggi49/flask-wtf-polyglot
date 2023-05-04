@@ -33,7 +33,7 @@ In contrast, using Flask-WTF’s default `Form`, the output would be:
 <input checked id="foo" name="foo" type="checkbox" value="y">
 ```
 
-In addition, this package exports `WTForms-Polyglot`_’s custom implementation
+In addition, this package exports `WTForms-Polyglot`’s custom implementation
 of WTForms’ `SubmitField`, which renders as a `<button>` instead of an
 `<input>` element.  For example:
 
